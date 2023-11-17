@@ -1,0 +1,59 @@
+from tkinter import *
+import pandas as pd
+import random
+import csv
+global english_word
+
+
+def on_click():
+    with open("french_words.csv", "r") as doc:
+        reader = csv.reader(doc)
+        global english_word
+        canvas.itemconfig(back_img, image=old_img)
+        canvas.itemconfig(french_label, text="French")
+        chosen_row = random.choice(list(reader))
+        french_word = chosen_row[0]
+        english_word = chosen_row[1]
+        print(chosen_row)
+        print(english_word)
+        canvas.itemconfig(french_text, text=french_word)
+        sleep()
+
+def flip():
+    global english_word
+    canvas.itemconfig(back_img, image=new_img)
+    canvas.itemconfig(french_label,text="English")
+    canvas.itemconfig(french_text, text=english_word)
+
+def sleep():
+    window.after(3000, func=flip)
+
+window= Tk()
+window.title("Flash Card")
+window.config(padx=50,pady=50,bg="light green")
+
+window.after_cancel(sleep)
+
+canvas= Canvas(height=200,width=300,bg="light green")
+old_img= PhotoImage(file="card_back.png")
+new_img=PhotoImage(file="card_front.png")
+back_img=canvas.create_image(100,100,image=old_img)
+canvas.grid(row=2,column=1, columnspan=3)
+
+french_label=canvas.create_text(150,30,text="French",font=("Ariel",30,"italic"))
+french_text=canvas.create_text(150,100,text="French",font=("Ariel",30,"italic","bold"))
+
+
+#button
+# wrong_image= PhotoImage(file="wrong.png")
+# wrong_button= Button(width=30,height=30,image=wrong_image,borderwidth= 2)
+# wrong_button.grid(row=3,column=3,padx=20)
+
+new_word_button= Button(width=30,height=2,text="New Word",borderwidth= 2,command=on_click)
+new_word_button.grid(row=3,column=1,padx=20,pady=10,columnspan=3)
+
+# correct_image= PhotoImage(file="right.png")
+# correct_button= Button(width=30,height=30,image=correct_image,borderwidth= 2,command=on_click)
+# correct_button.grid(row=3, column=1,padx=20)
+
+window.mainloop()
